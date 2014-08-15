@@ -1,0 +1,4 @@
+// ID    	Name		Address			St	Zip  	Majr	Minr	Rk	QCA   	AltQCA	Crd	Hrs
+135792468	Wayne,John Duke	101 Hollywood Way	CA	40815	CS	MATH	10	3.2667	4.0000	49	15
+436587901	Mix, Tom	828 Dallas Ave	TX	52848	CS	MATH	20	3.1245	3.0000	54.0000	30.00
+147036925	Brennan, Walter	939 Brownsville Ave	TX	71392	CS	MATH	30	3.2831	2.5200	54	30

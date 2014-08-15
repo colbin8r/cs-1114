@@ -1,0 +1,13 @@
+ID Number Name                 Major Minor Rank GPA    AltGPA QCredits Hours Att.
+147036925 Brennan, Walter      CS    MATH  30   2.7631 2.9267 232.1000 84.00
+436587901 Mix, Tom             CS    MATH  20   2.4370 2.4947 177.9000 73.00
+135792468 Wayne,John Duke      CS    MATH  10   3.2097 3.6333 99.5000  31.00
+
+Student GPAs:
+ID Number ........1.0.......2.0.......3.0.......4.0
+147036925:****************************
+436587901:************************
+135792468:********************************
+
+Average GPA:        2.8033
+Standard Deviation: 0.3167
