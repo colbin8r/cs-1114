@@ -1,5 +1,7 @@
 package colbin8r;
 
+import java.util.HashMap;
+
 public class Course {
 	
 	private String idNumber;
@@ -10,6 +12,24 @@ public class Course {
 	private int year;
 	private float creditHours;
 	private String grade;
+	
+	private static final HashMap<String, Float> qualityPointsMap;
+    static
+    {
+    	qualityPointsMap = new HashMap<String, Float>();
+    	qualityPointsMap.put("A", 4.0f);
+    	qualityPointsMap.put("A-", 3.7f);
+    	qualityPointsMap.put("B+", 3.3f);
+    	qualityPointsMap.put("B", 3.0f);
+    	qualityPointsMap.put("B-", 2.7f);
+    	qualityPointsMap.put("C+", 2.3f);
+    	qualityPointsMap.put("C", 2.0f);
+    	qualityPointsMap.put("C-", 1.7f);
+    	qualityPointsMap.put("D+", 1.3f);
+    	qualityPointsMap.put("D", 1.0f);
+    	qualityPointsMap.put("D-", 0.7f);
+    	qualityPointsMap.put("F", 0.0f);
+    }
 	
 	public String getIdNumber() {
 		return idNumber;
@@ -101,6 +121,10 @@ public class Course {
 		this.inputCourseData(inCourse);
 	}
 	
+	public String getIdentifier() {
+		return this.getIdNumber() + this.getDepartment() + this.getCourseNum();
+	}
+	
 	public boolean inputCourseData(String inCourse) {
 		String[] fields = inCourse.split("[\t]+");
 		
@@ -114,6 +138,15 @@ public class Course {
 		this.setGrade(fields[7]);
 		
 		return true;
+	}
+	
+	protected static float mapGradeToQualityPoints(String grade) {
+		return Course.qualityPointsMap.get(grade);
+	}
+	
+	public float getQualityCredits() {
+		// quality credits times quality points (according to grade)
+		return this.getCreditHours() * Course.mapGradeToQualityPoints(this.getGrade());
 	}
 
 }

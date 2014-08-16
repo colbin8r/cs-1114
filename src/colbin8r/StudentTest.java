@@ -8,7 +8,7 @@ import org.junit.Test;
 
 import student.testingsupport.PrintWriterWithHistory;
 
-public class StudentTest {
+public class StudentTest extends Student {
 	
 	private Student student;
 	
@@ -19,10 +19,13 @@ public class StudentTest {
 	
 	// for creating a sample course
 	public static Student studentFixture() {
-		return new Student(fixtureDataIn);
+		// start with some basic data
+		Student student = new Student(fixtureDataIn);
+		
+		return student;
 	}
 	
-	private final double gpaTolerance = .0001f;
+	private static final double tolerance = .0001f;
 
 	@Before
 	public void setUp() throws Exception {
@@ -47,18 +50,18 @@ public class StudentTest {
 		assertTrue(result);
 		
 		// test that all fields are equal to the expected values
-		assertEquals(this.student.getIdNumber(), this.fixture.getIdNumber());
-		assertEquals(this.student.getName(), this.fixture.getName());
-		assertEquals(this.student.getAddress(), this.fixture.getAddress());
-		assertEquals(this.student.getState(), this.fixture.getState());
-		assertEquals(this.student.getZip(), this.fixture.getZip());
-		assertEquals(this.student.getMajor(), this.fixture.getMajor());
-		assertEquals(this.student.getMinor(), this.fixture.getMinor());
-		assertEquals(this.student.getRank(), this.fixture.getRank());
-		assertEquals(this.student.getGpa(), this.fixture.getGpa(), this.gpaTolerance);
-		assertEquals(this.student.getAltGPA(), this.fixture.getAltGPA(), this.gpaTolerance);
-		assertEquals(this.student.getQualCred(), this.fixture.getQualCred(), this.gpaTolerance);
-		assertEquals(this.student.getHrsAtt(), this.fixture.getHrsAtt(), this.gpaTolerance);
+		assertEquals(this.student.idNumber(), this.fixture.idNumber());
+		assertEquals(this.student.name(), this.fixture.name());
+		assertEquals(this.student.address(), this.fixture.address());
+		assertEquals(this.student.state(), this.fixture.state());
+		assertEquals(this.student.zip(), this.fixture.zip());
+		assertEquals(this.student.major(), this.fixture.major());
+		assertEquals(this.student.minor(), this.fixture.minor());
+		assertEquals(this.student.rank(), this.fixture.rank());
+//		assertEquals(this.student.getGpa(), this.fixture.getGpa(), tolerance);
+		assertEquals(this.student.altGPA(), this.fixture.altGPA(), tolerance);
+		assertEquals(this.student.qualCred(), this.fixture.qualCred(), tolerance);
+		assertEquals(this.student.hrsAtt(), this.fixture.hrsAtt(), tolerance);
 	}
 	
 	@Test
@@ -78,16 +81,58 @@ public class StudentTest {
 	/*
 	 * Write the student data into the outStream using the output format described. 
 	 */
-//	public void testOutputStuData() {
-//		
-//		PrintWriterWithHistory out = new PrintWriterWithHistory();
-//		
-//		// run to get some results
-//		this.fixture.outputStuData(out);
-//			
-//		assertEquals(StudentTest.fixtureDataOut, out.getHistory());
-//		
-//	}
+	public void testOutputStuData() {
+		PrintWriterWithHistory out = new PrintWriterWithHistory();
+		
+		// run to get some results
+		this.fixture.outputStuData(out);
+		
+		// capture the output
+		String output = out.getHistory();
+		
+		// instantiate new student from output
+		Student outputStudent = new Student(output);
+		
+		// we aren't checking the gpa calculation here (need to load classes to generate, anyway)
+		outputStudent.setGpa("3.2667");
+		
+		// is the output student equal to the one we put in?
+		assertEquals(outputStudent, this.fixture);
+	}
+	
+	@Test
+	/*
+	 * Test if GPA is calculated correctly.
+	 */
+	public void testGetGpa() {
+		// create a few courses
+		Course course1 = CourseTest.courseFixtureRandom(1234);
+		Course course2 = CourseTest.courseFixtureRandom(2345);
+		Course course3 = CourseTest.courseFixtureRandom(3456);
+		course1.setIdNumber(student.idNumber());
+		course2.setIdNumber(student.idNumber());
+		course3.setIdNumber(student.idNumber());
+		
+		course1.setCreditHours(3);
+		course1.setGrade("A");
+		
+		course2.setCreditHours(3);
+		course2.setGrade("C");
+		
+		course3.setCreditHours(1);
+		course3.setGrade("B-");
+		
+		// load the courses into the student
+		student.addCourse(course1);
+		student.addCourse(course2);
+		student.addCourse(course3);
+		
+		// what's the new gpa?
+		// quality credits = 20.7
+		// attempted hrs = 7
+		float expectedGpa = (20.7f / 7.0f);
+		assertEquals(expectedGpa, this.student.getGpa(), tolerance);
+	}
 	
 //	public void testSetZip() {
 //		// zip codes should always be positive

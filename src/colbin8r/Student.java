@@ -2,6 +2,7 @@ package colbin8r;
 
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 // -------------------------------------------------------------------------
 /**
@@ -21,7 +22,7 @@ public class Student
 	private String major;
 	private String minor;
 	private int rank;
-	private float gpa;
+	private float gpa = Float.NaN; // no gpa by default
 	private float altGPA;
 	private float qualCred;
 	private float hrsAtt;
@@ -42,7 +43,7 @@ public class Student
     	this.inputStuData(inStudent);
     }
     
-    public String getIdNumber() {
+    public String idNumber() {
 		return idNumber;
 	}
 
@@ -50,7 +51,7 @@ public class Student
 		this.idNumber = idNumber;
 	}
 
-	public String getName() {
+	public String name() {
 		return name;
 	}
 
@@ -58,7 +59,7 @@ public class Student
 		this.name = name;
 	}
 
-	public String getAddress() {
+	public String address() {
 		return address;
 	}
 
@@ -66,7 +67,7 @@ public class Student
 		this.address = address;
 	}
 
-	public String getState() {
+	public String state() {
 		return state;
 	}
 
@@ -74,7 +75,7 @@ public class Student
 		this.state = state;
 	}
 
-	public int getZip() {
+	public int zip() {
 		return zip;
 	}
 
@@ -86,7 +87,7 @@ public class Student
 		this.setZip(Integer.parseInt(zip));
 	}
 
-	public String getMajor() {
+	public String major() {
 		return major;
 	}
 
@@ -94,7 +95,7 @@ public class Student
 		this.major = major;
 	}
 
-	public String getMinor() {
+	public String minor() {
 		return minor;
 	}
 
@@ -102,7 +103,7 @@ public class Student
 		this.minor = minor;
 	}
 
-	public int getRank() {
+	public int rank() {
 		return rank;
 	}
 
@@ -114,10 +115,6 @@ public class Student
 		this.setRank(Integer.parseInt(rank));
 	}
 
-	public float getGpa() {
-		return gpa;
-	}
-
 	public void setGpa(float gpa) {
 		this.gpa = gpa;
 	}
@@ -126,7 +123,7 @@ public class Student
 		this.setGpa(Float.parseFloat(gpa));
 	}
 
-	public float getAltGPA() {
+	public float altGPA() {
 		return altGPA;
 	}
 
@@ -138,7 +135,7 @@ public class Student
 		this.setAltGPA(Float.parseFloat(altGPA));
 	}
 
-	public float getQualCred() {
+	public float qualCred() {
 		return qualCred;
 	}
 
@@ -150,7 +147,7 @@ public class Student
 		this.setQualCred(Float.parseFloat(qualCred));
 	}
 
-	public float getHrsAtt() {
+	public float hrsAtt() {
 		return hrsAtt;
 	}
 
@@ -171,7 +168,7 @@ public class Student
 	
 	public boolean hasCourse(Course course) {;
 		for (Course c : this.courses) {
-			if (c.getIdNumber().equals(course.getIdNumber())) {
+			if (c.getIdentifier().equals(course.getIdentifier())) {
 				return true;
 			}
 		}
@@ -213,23 +210,65 @@ public class Student
 		return false;
 	}
 	
-//	public boolean outputStuData(PrintWriter outStream) {
-//		StringBuilder string = new StringBuilder();
-//		
-//		string.append(this.getIdNumber() + "\t");
-//		string.append(this.getName() + "\t");
-//		string.append(this.getAddress() + "\t");
-//		string.append(this.getState() + "\t");
-//		string.append(this.getZip() + "\t");
-//		string.append(this.getMajor() + "\t");
-//		string.append(this.getMinor() + "\t");
-//		string.append(this.getRank() + "\t");
-//		string.append(this.getGpa() + "\t");
-//		string.append(this.getQualCred() + "\t");
-//		string.append(this.getHrsAtt() + "\t");
-//
-//		outStream.print(string);
-//		return false;
-//	}
+	public boolean outputStuData(PrintWriter outStream) {
+		StringBuilder string = new StringBuilder();
+		
+		string.append(this.idNumber() + "\t");
+		string.append(this.name() + "\t");
+		string.append(this.address() + "\t");
+		string.append(this.state() + "\t");
+		string.append(this.zip() + "\t");
+		string.append(this.major() + "\t");
+		string.append(this.minor() + "\t");
+		string.append(this.rank() + "\t");
+		string.append(this.getGpa() + "\t");
+		string.append(String.format("%.4f", this.altGPA()) + "\t");
+		string.append(String.format("%.0f", this.qualCred()) + "\t");
+		string.append(String.format("%.0f", this.hrsAtt()) + "\t");
+
+		outStream.print(string);
+		return false;
+	}
+	
+	public float getGpa() {
+		
+		// if we don't have a gpa, calculate one
+		if (Float.isNaN(this.gpa)) {
+			this.calculateGpa();			
+		}
+		
+		return this.gpa;
+	}
+	
+	public void calculateGpa() {
+		float totalQualityCredits = 0.0f;
+		int totalCreditHoursAttempted = 0;
+		
+		for (Course course : this.courses) {
+			totalQualityCredits += course.getQualityCredits();
+			totalCreditHoursAttempted += course.getCreditHours();
+		}
+		
+		this.gpa = totalQualityCredits / totalCreditHoursAttempted;
+	}
+	
+	@Override
+	public boolean equals(Object student) {
+		if (this.toString().equals(student.toString())) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	@Override
+	public String toString() {
+		return "Student [idNumber=" + idNumber + ", name=" + name
+				+ ", address=" + address + ", state=" + state + ", zip=" + zip
+				+ ", major=" + major + ", minor=" + minor + ", rank=" + rank
+				+ ", gpa=" + gpa + ", altGPA=" + altGPA + ", qualCred="
+				+ qualCred + ", hrsAtt=" + hrsAtt + ", courses=" + courses
+				+ "]";
+	}
 
 }
