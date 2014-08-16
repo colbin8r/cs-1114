@@ -63,14 +63,14 @@ public class CourseTest extends Course {
 		// success?
 		assertTrue(result);
 		
-		assertEquals(this.course.getIdNumber(), this.fixture.getIdNumber());
-		assertEquals(this.course.getIndex(), this.fixture.getIndex());
-		assertEquals(this.course.getDepartment(), this.fixture.getDepartment());
-		assertEquals(this.course.getCourseNum(), this.fixture.getCourseNum());
-		assertEquals(this.course.getTerm(), this.fixture.getTerm());
-		assertEquals(this.course.getYear(), this.fixture.getYear());
-		assertEquals(this.course.getCreditHours(), this.fixture.getCreditHours(), tolerance);
-		assertEquals(this.course.getGrade(), this.fixture.getGrade());
+		assertEquals(this.course.idNumber(), this.fixture.idNumber());
+		assertEquals(this.course.index(), this.fixture.index());
+		assertEquals(this.course.department(), this.fixture.department());
+		assertEquals(this.course.courseNum(), this.fixture.courseNum());
+		assertEquals(this.course.term(), this.fixture.term());
+		assertEquals(this.course.year(), this.fixture.year());
+		assertEquals(this.course.creditHours(), this.fixture.creditHours(), tolerance);
+		assertEquals(this.course.grade(), this.fixture.grade());
 	}
 	
 	@Test

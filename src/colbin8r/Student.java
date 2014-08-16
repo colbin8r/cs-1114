@@ -246,7 +246,7 @@ public class Student
 		
 		for (Course course : this.courses) {
 			totalQualityCredits += course.getQualityCredits();
-			totalCreditHoursAttempted += course.getCreditHours();
+			totalCreditHoursAttempted += course.creditHours();
 		}
 		
 		this.gpa = totalQualityCredits / totalCreditHoursAttempted;

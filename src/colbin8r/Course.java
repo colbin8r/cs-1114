@@ -31,7 +31,7 @@ public class Course {
     	qualityPointsMap.put("F", 0.0f);
     }
 	
-	public String getIdNumber() {
+	public String idNumber() {
 		return idNumber;
 	}
 
@@ -39,7 +39,7 @@ public class Course {
 		this.idNumber = idNumber;
 	}
 
-	public int getIndex() {
+	public int index() {
 		return index;
 	}
 
@@ -51,7 +51,7 @@ public class Course {
 		this.setIndex(Integer.parseInt(index));
 	}
 
-	public String getDepartment() {
+	public String department() {
 		return department;
 	}
 
@@ -59,7 +59,7 @@ public class Course {
 		this.department = department;
 	}
 
-	public int getCourseNum() {
+	public int courseNum() {
 		return courseNum;
 	}
 
@@ -71,7 +71,7 @@ public class Course {
 		this.setCourseNum(Integer.parseInt(courseNum));
 	}
 
-	public String getTerm() {
+	public String term() {
 		return term;
 	}
 
@@ -79,7 +79,7 @@ public class Course {
 		this.term = term;
 	}
 
-	public int getYear() {
+	public int year() {
 		return year;
 	}
 
@@ -91,7 +91,7 @@ public class Course {
 		this.setYear(Integer.parseInt(year));
 	}
 
-	public float getCreditHours() {
+	public float creditHours() {
 		return creditHours;
 	}
 
@@ -105,7 +105,7 @@ public class Course {
 		this.setCreditHours(creditHoursInt);
 	}
 
-	public String getGrade() {
+	public String grade() {
 		return grade;
 	}
 
@@ -122,7 +122,7 @@ public class Course {
 	}
 	
 	public String getIdentifier() {
-		return this.getIdNumber() + this.getDepartment() + this.getCourseNum();
+		return this.idNumber() + this.department() + this.courseNum();
 	}
 	
 	public boolean inputCourseData(String inCourse) {
@@ -146,7 +146,7 @@ public class Course {
 	
 	public float getQualityCredits() {
 		// quality credits times quality points (according to grade)
-		return this.getCreditHours() * Course.mapGradeToQualityPoints(this.getGrade());
+		return this.creditHours() * Course.mapGradeToQualityPoints(this.grade());
 	}
 
 }
