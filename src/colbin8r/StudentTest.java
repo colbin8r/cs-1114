@@ -131,7 +131,7 @@ public class StudentTest extends Student {
 		// quality credits = 20.7
 		// attempted hrs = 7
 		float expectedGpa = (20.7f / 7.0f);
-		assertEquals(expectedGpa, this.student.getGpa(), tolerance);
+		assertEquals(expectedGpa, this.student.gpa(), tolerance);
 	}
 	
 //	public void testSetZip() {

@@ -13,6 +13,8 @@ public class Course {
 	private float creditHours;
 	private String grade;
 	
+	private static final String PASS_FAIL_GRADE = "P";
+	
 	private static final HashMap<String, Float> qualityPointsMap;
     static
     {
@@ -147,6 +149,10 @@ public class Course {
 	public float getQualityCredits() {
 		// quality credits times quality points (according to grade)
 		return this.creditHours() * Course.mapGradeToQualityPoints(this.grade());
+	}
+
+	public boolean isPassFail() {
+		return (this.grade().equals(PASS_FAIL_GRADE));
 	}
 
 }

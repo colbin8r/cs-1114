@@ -10,7 +10,7 @@ import java.util.ArrayList;
  *  @author  colbin8r
  *  @version 2014.08.15
  */
-public class Student
+public class Student implements Comparable<Student>
 {
     //~ Instance/static variables .............................................
 	private String idNumber;
@@ -130,10 +130,6 @@ public class Student
 		this.setGpa(Float.parseFloat(gpa));
 	}
 
-	public float altGPA() {
-		return altGPA;
-	}
-
 	public void setAltGPA(float altGPA) {
 		this.altGPA = altGPA;
 	}
@@ -142,20 +138,12 @@ public class Student
 		this.setAltGPA(Float.parseFloat(altGPA));
 	}
 
-	public float qualCred() {
-		return qualCred;
-	}
-
 	public void setQualCred(float qualCred) {
 		this.qualCred = qualCred;
 	}
 	
 	public void setQualCred(String qualCred) {
 		this.setQualCred(Float.parseFloat(qualCred));
-	}
-
-	public float hrsAtt() {
-		return hrsAtt;
 	}
 
 	public void setHrsAtt(float hrsAtt) {
@@ -218,26 +206,58 @@ public class Student
 	}
 	
 	public boolean outputStuData(PrintWriter outStream) {
-		StringBuilder string = new StringBuilder();
 		
-		string.append(this.idNumber() + "\t");
-		string.append(this.name() + "\t");
-		string.append(this.address() + "\t");
-		string.append(this.state() + "\t");
-		string.append(this.zip() + "\t");
-		string.append(this.major() + "\t");
-		string.append(this.minor() + "\t");
-		string.append(this.rank() + "\t");
-		string.append(this.getGpa() + "\t");
-		string.append(String.format("%.4f", this.altGPA()) + "\t");
-		string.append(String.format("%.0f", this.qualCred()) + "\t");
-		string.append(String.format("%.0f", this.hrsAtt()) + "\t");
+		StringBuilder output = new StringBuilder();
+		
+		// "ID Number Name                 Major Minor Rank GPA    AltGPA QCredits Hours Att.";
+		String idNumberHead = "ID Number ";
+		String nameHead = "Name                 ";
+		String majorHead = "Major ";
+		String minorHead = "Minor ";
+		String rankHead = "Rank ";
+		String gpaHead = "GPA    ";
+		String altGPAHead = "AltGPA ";
+		String qualCredHead = "QCredits ";
+		String hrsAttHead = "Hours Att.";
+		
+		output.append(formatColumn(idNumberHead, this.idNumber));
+		output.append(formatColumn(nameHead, this.name()));
+		output.append(formatColumn(majorHead, this.major()));
+		output.append(formatColumn(minorHead, this.minor()));
+		output.append(formatColumn(rankHead, String.valueOf(this.rank())));
+		output.append(formatColumn(gpaHead, String.format("%.4f", this.gpa())));
+		output.append(formatColumn(altGPAHead, String.format("%.4f", this.altGPA())));
+		output.append(formatColumn(qualCredHead, String.format("%.4f", this.qualCred())));
+		output.append(formatColumn(hrsAttHead, String.format("%.2f", this.hrsAtt())));
 
-		outStream.print(string);
+		outStream.println(output);
+		
 		return false;
 	}
 	
-	public float getGpa() {
+	private String formatColumn(String columnHead, String value) {
+		StringBuilder output = new StringBuilder();
+		
+		output.append(value);
+		output.append(spacer(columnHead, value));
+		
+		return output.toString();
+	}
+	
+	private String spacer(String columnHead, String value) {
+		StringBuilder spacer = new StringBuilder();
+		
+		int fieldLength = value.length();
+		int fieldLengthMax = columnHead.length();
+		int spaces = fieldLengthMax - fieldLength;
+		
+		for (int i = 0; i < spaces; i++) {
+			spacer.append(" ");
+		}
+		return spacer.toString();
+	}
+	
+	public float gpa() {
 		
 		// if we don't have a gpa, calculate one
 		if (Float.isNaN(this.gpa) || this.gpa == 0.0f) {
@@ -248,17 +268,102 @@ public class Student
 	}
 	
 	public void calculateGpa() {
+		
+		if (this.courses.isEmpty()) {
+			this.gpa = 0.0f;
+			return;
+		}
+		
 		float totalQualityCredits = 0.0f;
 		int totalCreditHoursAttempted = 0;
 		
 		for (Course course : this.courses) {
-			totalQualityCredits += course.getQualityCredits();
-			totalCreditHoursAttempted += course.creditHours();
+			if (!course.isPassFail()) {
+				totalQualityCredits += course.getQualityCredits();
+				totalCreditHoursAttempted += course.creditHours();
+			}
 		}
 		
 		this.gpa = totalQualityCredits / totalCreditHoursAttempted;
 	}
 	
+	public float altGPA() {
+		
+		if (Float.isNaN(this.altGPA) || this.altGPA == 0.0f) {
+			this.calculateAltGPA();
+		}
+		
+		return this.altGPA;
+	}
+	
+	public void calculateAltGPA() {
+		
+		if (this.courses.isEmpty()) {
+			this.altGPA = 0.0f;
+			return;
+		}
+		
+		float totalQualityCredits = 0.0f;
+		int totalCreditHoursAttempted = 0;
+		
+		for (Course course : this.courses) {
+			if (course.department().equals(this.major()) && !course.isPassFail()) {
+				totalQualityCredits += course.getQualityCredits();
+				totalCreditHoursAttempted += course.creditHours();
+			}
+		}
+		
+		this.altGPA = totalQualityCredits / totalCreditHoursAttempted;
+	}
+	
+	public float qualCred() {
+		if (Float.isNaN(this.qualCred) || this.qualCred == 0.0f) {
+			this.calculateQualCred();
+		}
+		return qualCred;
+	}
+	
+	public void calculateQualCred() {
+		if (this.courses.isEmpty()) {
+			this.qualCred = 0.0f;
+			return;
+		}
+		
+		float totalQualityCredits = 0.0f;
+		
+		for (Course course : this.courses) {
+			if (!course.isPassFail()) {
+				totalQualityCredits += course.getQualityCredits();
+			}
+		}
+		
+		this.qualCred = totalQualityCredits;
+	}
+	
+	public float hrsAtt() {
+		if (Float.isNaN(this.hrsAtt) || this.hrsAtt == 0.0f) {
+			this.calculateHrsAtt();
+		}
+		return hrsAtt;
+	}
+	
+	public void calculateHrsAtt() {
+		if (this.courses.isEmpty()) {
+			this.hrsAtt = 0;
+			return;
+		}
+		
+		int totalCreditHoursAttempted = 0;
+		
+		for (Course course : this.courses) {
+			if (!course.isPassFail()) {
+				totalCreditHoursAttempted += course.creditHours();
+			}
+		}
+		
+		this.hrsAtt = totalCreditHoursAttempted;
+	}
+
 	@Override
 	public boolean equals(Object student) {
 		if (this.toString().equals(student.toString())) {
@@ -276,6 +381,11 @@ public class Student
 				+ ", gpa=" + gpa + ", altGPA=" + altGPA + ", qualCred="
 				+ qualCred + ", hrsAtt=" + hrsAtt + ", courses=" + courses
 				+ "]";
+	}
+
+	@Override
+	public int compareTo(Student other) {
+		return name().compareTo(other.name());
 	}
 
 }
