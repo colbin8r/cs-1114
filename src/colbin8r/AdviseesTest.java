@@ -90,5 +90,25 @@ public class AdviseesTest extends Advisees {
 		assertNull(this.advisees.get(-1));
 		assertNull(this.advisees.get(2));
 	}
+	
+	@Test
+	public void testMean() throws Exception {
+		// should return -1 if no students
+		assertEquals(this.advisees.mean(), Double.valueOf(-1.0000), Double.valueOf(.0001));
+		
+		this.advisees.inputStudents(this.inStream);
+		double expectedMean = 3.2248f;
+		assertEquals(expectedMean, this.advisees.mean(), Double.valueOf(.0001));
+	}
+	
+	@Test
+	public void testStdDev() throws Exception {
+		// should return -1 if no students
+		assertEquals(this.advisees.stdDev(), Double.valueOf(-1.0000), Double.valueOf(.0001));
+		
+		this.advisees.inputStudents(this.inStream);
+		double expectedStdDev = 0.07121f;
+		assertEquals(expectedStdDev, this.advisees.stdDev(), Double.valueOf(.0001));
+	}
 
 }

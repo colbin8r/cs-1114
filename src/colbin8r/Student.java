@@ -240,7 +240,7 @@ public class Student
 	public float getGpa() {
 		
 		// if we don't have a gpa, calculate one
-		if (Float.isNaN(this.gpa)) {
+		if (Float.isNaN(this.gpa) || this.gpa == 0.0f) {
 			this.calculateGpa();			
 		}
 		

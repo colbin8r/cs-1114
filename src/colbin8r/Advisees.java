@@ -1,5 +1,6 @@
 package colbin8r;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -10,6 +11,11 @@ public class Advisees {
 
 	public Advisees() {
 		// TODO Auto-generated constructor stub
+	}
+	
+	public double formatDouble(double number) {
+		DecimalFormat format = new DecimalFormat("#.####");      
+		return Double.valueOf(format.format(number));
 	}
 	
 	public void addStudent(Student student) {
@@ -32,6 +38,10 @@ public class Advisees {
 //		return false;
 	}
 	
+	public boolean hasStudents() {
+		return !this.students.isEmpty();
+	}
+	
 	public Student find(String idNumber) throws Exception {
 		for (Student student : this.students) {
 			if (student.idNumber().equals(idNumber)) {
@@ -42,7 +52,7 @@ public class Advisees {
 	}
 	
 	public Student get(int index) {
-		if (this.students.isEmpty()) {
+		if (!this.hasStudents()) {
 			return null;
 		}
 		try {
@@ -65,6 +75,33 @@ public class Advisees {
 			this.addStudent(new Student(token));
 		}
 		return false;
+	}
+	
+	public double mean() {
+		if (!this.hasStudents()) {
+			return Double.valueOf(-1.0000);
+		}
+		double sumGpa = 0;
+		for (Student student : this.students){
+			sumGpa += student.getGpa();
+		}
+		
+		return formatDouble(sumGpa/this.students.size());
+	}
+	
+	public double stdDev() {
+		if (!this.hasStudents()) {
+			return Double.valueOf(-1.0000);
+		}
+		
+		double sum = 0.0;
+		double mean = this.mean();
+		
+		for (Student student : this.students){
+			sum += Math.pow(student.getGpa() - mean, 2);
+		}
+		
+		return formatDouble(Math.sqrt(sum / this.students.size()));
 	}
 
 }
