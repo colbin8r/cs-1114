@@ -42,6 +42,14 @@ public class Student
     	this.inputStuData(inStudent);
     }
     
+//    public Student(String[] fields) {
+//    	StringBuilder inStudent = new StringBuilder();
+//    	for (String field : fields) {
+//    		inStudent.append(field + "\t");
+//    	}
+//    	this.inputStuData(inStudent.toString());
+//    }
+    
     public String idNumber() {
 		return idNumber;
 	}
